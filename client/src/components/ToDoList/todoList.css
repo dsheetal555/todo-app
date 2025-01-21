@@ -1,0 +1,49 @@
+
+.header {
+    background-color: #f1f1f1;
+    height: 80px;
+    font-weight: bold;
+    color: #007bff;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 120px;
+}
+.addBtn{
+    margin-left: 500px;
+    cursor: pointer;
+}
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    border: 1px solid #525050;
+    transition: 0.3s;
+    width: 20%;
+    border-radius: 10px;
+    margin-left: 20px;
+    text-align: center;
+
+}
+
+.card:hover {
+    box-shadow: 0 8px 16px 0 rgba(22, 22, 22, 0.2);
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    margin-top: 50px;
+}
+.todo-btn{
+    margin: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.editBtn{
+    color: #007bff;
+    cursor: pointer;
+}
+.delBtn{
+    color: red;
+    cursor: pointer;
+}
