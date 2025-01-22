@@ -12,11 +12,20 @@ const swaggerDefinition = {
             url: "http://localhost:8080/",
             description: "Local server"
         },
-        {
-            url: "<your live url here>",
-            description: "Live server"
-        },
-    ]
+    ],
+    basePath: '/',
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        }
+      }
+    },
+    security: [{
+      bearerAuth: []
+    }],
 };
 
 const options = {

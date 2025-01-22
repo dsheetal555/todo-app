@@ -1,10 +1,12 @@
 const Task = require("../models/task");
 const express = require("express");
 const router = express.Router();
+const verifyToken = require('../middleware/authMiddleware');
+const jwt = require('jsonwebtoken');
 
 /** POST Methods */
 /**
- * @openapi
+ * @swagger
  * '/api/tasks':
  *  post:
  *     tags:
@@ -40,7 +42,7 @@ const router = express.Router();
  *      500:
  *        description: Server Error
  */
-router.post("/", async (req, res) => {
+router.post("/", verifyToken, async (req, res) => {
     try {
         const task = await new Task(req.body).save();
         res.send(task);
@@ -51,7 +53,7 @@ router.post("/", async (req, res) => {
 
 /** GET Methods */
 /**
- * @openapi
+ * @swagger
  * '/api/tasks':
  *  get:
  *     tags:
@@ -67,7 +69,7 @@ router.post("/", async (req, res) => {
  *      500:
  *        description: Server Error
  */
-router.get("/", async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
     try {
         const tasks = await Task.find();
         res.send(tasks);
@@ -76,7 +78,7 @@ router.get("/", async (req, res) => {
     }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", verifyToken, async (req, res) => {
     try {
         const task = await Task.findOneAndUpdate(
             { _id: req.params.id },
@@ -88,10 +90,55 @@ router.put("/:id", async (req, res) => {
     }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verifyToken, async (req, res) => {
     try {
         const task = await Task.findByIdAndDelete(req.params.id);
         res.send(task);
+    } catch (error) {
+        res.send(error);
+    }
+});
+
+/** POST Methods */
+/**
+ * @swagger
+ * '/api/tasks/login':
+ *  post:
+ *     tags:
+ *     - login Controller
+ *     summary: create a new token
+ *     requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *           schema:
+ *            type: object
+ *            required:
+ *              - userId
+ *              - application
+ *            properties:
+ *              userId:
+ *                type: string
+ *                default: 12 
+ *              application:
+ *                type: string
+ *                default: todoApp
+ *     responses:
+ *      201:
+ *        description: Created Token
+ *      409:
+ *        description: Conflict
+ *      404:
+ *        description: Not Found
+ *      500:
+ *        description: Server Error
+ */
+router.post("/login", async (req, res) => {
+    try {
+        const secretkey = "da30e0c0eafbadba9389c0883c6537acc7ba17e188a53f49e8dcf6bb914c1fcb"
+        const token = jwt.sign(req.body, secretkey);
+        console.log(token);
+        res.send({ token });
     } catch (error) {
         res.send(error);
     }

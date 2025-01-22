@@ -5,8 +5,6 @@ const express = require("express");
 const swaggerUI = require("swagger-ui-express");
 const swaggerSpec = require('./swagger');
 const app = express();
-
-
 connection();
 
 app.use(express.json());
