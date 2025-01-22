@@ -1,45 +1,37 @@
-const Task = require("../models/task");
 const { createTaskService, getTasksService, updateTaskService, deleteTaskService, createTokenSevice } = require('../services/TaskService');
 
 exports.createTaskController = (req, res) => {
-    createTaskService(req, res)
-        .then((task) => {
-            res.send(task);
-        })
-        .catch((error) => {
-            res.send(error);
-        });
+    createTaskService(req, res).then((task) => {
+        res.status(201).send(task);
+    }).catch((error) => {
+        res.status(500).send(error);
+    });
 }
 
 exports.getTasksController = (req, res) => {
-    getTasksService(req, res)
-        .then((tasks) => {
-            res.send(tasks);
-        })
-        .catch((error) => {
-            res.send(error);
-        });
+    getTasksService(req, res).then((tasks) => {
+        res.status(200).send(tasks);
+    }).catch((error) => {
+        res.status(500).send(error);
+    });
 }
 
 exports.updateTaskController = (req, res) => {
     updateTaskService(req, res)
         .then((task) => {
-            res.send(task);
+            res.status(200).send(task);
         })
         .catch((error) => {
-            res.send(error);
+            res.status(500).send(error);
         });
 }
 
 exports.deleteTaskController = async (req, res) => {
-    console.log("deleteTaskController", req.params.id);
-    deleteTaskService(req, res)
-        .then((task) => {
-            res.send(task);
-        })
-        .catch((error) => {
-            res.send(error);
-        });
+    deleteTaskService(req, res).then((task) => {
+        res.send(task);
+    }).catch((error) => {
+        res.send(error);
+    });
 }
 
 exports.createToken = (req, res) => {
