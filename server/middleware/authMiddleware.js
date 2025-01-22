@@ -11,7 +11,7 @@ function verifyToken(req, res, next) {
     // const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyLCJhcHBsaWNhdGlvbiI6InRvZG9BcHAiLCJpYXQiOjE3Mzc1MjkwNjZ9.aJ8majoJqXukD6cPW1Q3-zRtn6Ybp1buJapChUH-OYM";
     const authHeader = req.header('authorization');
     let token = ""
-    if(authHeader.startsWith("Bearer ")) {
+    if(authHeader && authHeader.startsWith("Bearer ")) {
         token = authHeader.substring(7, authHeader.length);
     }
 
@@ -19,7 +19,7 @@ function verifyToken(req, res, next) {
     try {
         const decoded = jwt.verify(token, secretkey);
         if(decoded.application === 'todoApp') {
-            // console.log("verified Info",decoded);
+            console.log("JWT Verified",decoded);
             next();
         } else {
             res.status(500).json({ error: 'Invalid token' });

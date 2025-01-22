@@ -1,8 +1,9 @@
-const Task = require("../models/task");
 const express = require("express");
 const router = express.Router();
 const verifyToken = require('../middleware/authMiddleware');
 const jwt = require('jsonwebtoken');
+
+const taskController = require('../controllers/TaskController');
 
 /** POST Methods */
 /**
@@ -10,7 +11,7 @@ const jwt = require('jsonwebtoken');
  * '/api/tasks':
  *  post:
  *     tags:
- *     - User Controller
+ *     - Tasks Controller
  *     summary: Create a new todo task
  *     requestBody:
  *      required: true
@@ -42,14 +43,7 @@ const jwt = require('jsonwebtoken');
  *      500:
  *        description: Server Error
  */
-router.post("/", verifyToken, async (req, res) => {
-    try {
-        const task = await new Task(req.body).save();
-        res.send(task);
-    } catch (error) {
-        res.send(error);
-    }
-});
+router.route("/").post(verifyToken, taskController.createTaskController);
 
 /** GET Methods */
 /**
@@ -57,7 +51,7 @@ router.post("/", verifyToken, async (req, res) => {
  * '/api/tasks':
  *  get:
  *     tags:
- *     - User Controller
+ *     - Tasks Controller
  *     summary: Get all todo tasks
  *     responses:
  *      200:
@@ -69,35 +63,77 @@ router.post("/", verifyToken, async (req, res) => {
  *      500:
  *        description: Server Error
  */
-router.get("/", verifyToken, async (req, res) => {
-    try {
-        const tasks = await Task.find();
-        res.send(tasks);
-    } catch (error) {
-        res.send(error);
-    }
-});
+router.route("/").get(verifyToken, taskController.getTasksController);
 
-router.put("/:id", verifyToken, async (req, res) => {
-    try {
-        const task = await Task.findOneAndUpdate(
-            { _id: req.params.id },
-            req.body
-        );
-        res.send(task);
-    } catch (error) {
-        res.send(error);
-    }
-});
+/** PUT Methods */
+/**
+ * @swagger
+ * '/api/tasks/{id}':
+ *  put:
+ *     tags:
+ *     - Task Controller
+ *     summary: Modify a Task
+ *     parameters:
+ *      - in: path
+ *        name: id
+ *        description: The unique Id of the task
+ *        required: true
+ *     requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *           schema:
+ *            type: object
+ *            required:
+ *              - task
+ *              - description
+ *              - status
+ *            properties:
+ *              task:
+ *                type: string
+ *                default: task1 
+ *              description:
+ *                type: string
+ *                default: task1 description
+ *              status:
+ *                type: string
+ *                default: pending
+ *     responses:
+ *      200:
+ *        description: Modified
+ *      400:
+ *        description: Bad Request
+ *      404:
+ *        description: Not Found
+ *      500:
+ *        description: Server Error
+ */
+router.route("/:id").put(verifyToken, taskController.updateTaskController);
 
-router.delete("/:id", verifyToken, async (req, res) => {
-    try {
-        const task = await Task.findByIdAndDelete(req.params.id);
-        res.send(task);
-    } catch (error) {
-        res.send(error);
-    }
-});
+/** DELETE Methods */
+/**
+ * @swagger
+ * '/api/tasks/{id}':
+ *  delete:
+ *     tags:
+ *     - Task Controller
+ *     summary: Delete task by Id
+ *     parameters:
+ *      - in: path
+ *        name: id
+ *        description: The unique Id of the task
+ *        required: true
+ *     responses:
+ *      200:
+ *        description: Removed
+ *      400:
+ *        description: Bad request
+ *      404:
+ *        description: Not Found
+ *      500:
+ *        description: Server Error
+ */
+router.route("/:id").delete(verifyToken, taskController.deleteTaskController);
 
 /** POST Methods */
 /**
@@ -133,15 +169,6 @@ router.delete("/:id", verifyToken, async (req, res) => {
  *      500:
  *        description: Server Error
  */
-router.post("/login", async (req, res) => {
-    try {
-        const secretkey = "da30e0c0eafbadba9389c0883c6537acc7ba17e188a53f49e8dcf6bb914c1fcb"
-        const token = jwt.sign(req.body, secretkey);
-        console.log(token);
-        res.send({ token });
-    } catch (error) {
-        res.send(error);
-    }
-});
+router.route("/login").post(taskController.createToken);
 
 module.exports = router;
