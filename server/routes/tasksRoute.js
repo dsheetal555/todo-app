@@ -1,9 +1,8 @@
-const express = require("express");
-const router = express.Router();
-const verifyToken = require('../middleware/authMiddleware');
-const jwt = require('jsonwebtoken');
+import { Router } from "express";
+const router = Router();
+import verifyToken from '../middleware/authMiddleware.js';
 
-const taskController = require('../controllers/TaskController');
+import { createTaskController, getTasksController, updateTaskController, deleteTaskController, createToken } from '../controllers/TaskController.js';
 
 /** POST Methods */
 /**
@@ -43,7 +42,7 @@ const taskController = require('../controllers/TaskController');
  *      500:
  *        description: Server Error
  */
-router.route("/").post(verifyToken, taskController.createTaskController);
+router.route("/").post(verifyToken, createTaskController);
 
 /** GET Methods */
 /**
@@ -63,7 +62,7 @@ router.route("/").post(verifyToken, taskController.createTaskController);
  *      500:
  *        description: Server Error
  */
-router.route("/").get(verifyToken, taskController.getTasksController);
+router.route("/").get(verifyToken, getTasksController);
 
 /** PUT Methods */
 /**
@@ -108,7 +107,7 @@ router.route("/").get(verifyToken, taskController.getTasksController);
  *      500:
  *        description: Server Error
  */
-router.route("/:id").put(verifyToken, taskController.updateTaskController);
+router.route("/:id").put(verifyToken, updateTaskController);
 
 /** DELETE Methods */
 /**
@@ -133,7 +132,7 @@ router.route("/:id").put(verifyToken, taskController.updateTaskController);
  *      500:
  *        description: Server Error
  */
-router.route("/:id").delete(verifyToken, taskController.deleteTaskController);
+router.route("/:id").delete(verifyToken, deleteTaskController);
 
 /** POST Methods */
 /**
@@ -169,6 +168,6 @@ router.route("/:id").delete(verifyToken, taskController.deleteTaskController);
  *      500:
  *        description: Server Error
  */
-router.route("/login").post(taskController.createToken);
+router.route("/login").post(createToken);
 
-module.exports = router;
+export default router;

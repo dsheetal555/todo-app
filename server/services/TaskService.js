@@ -1,7 +1,8 @@
-const jwt = require('jsonwebtoken')
-const taskModel = require("../models/task");
+import pkg from 'jsonwebtoken';
+import taskModel from "../models/task.js";
 
-exports.createTaskService = async (req, res) => {
+const { sign } = pkg;
+export async function createTaskService(req, res) {
     return new Promise((resolve, reject) => {
         const task = new taskModel(req.body);
         task.save()
@@ -14,7 +15,7 @@ exports.createTaskService = async (req, res) => {
     });
 }
 
-exports.getTasksService = async (req, res) => {
+export async function getTasksService(req, res) {
     return new Promise((resolve, reject) => {
         taskModel.find()
             .then((tasks) => {
@@ -26,7 +27,7 @@ exports.getTasksService = async (req, res) => {
     });
 }
 
-exports.updateTaskService = async (req, res) => {
+export async function updateTaskService(req, res) {
     return new Promise((resolve, reject) => {
         taskModel.findOneAndUpdate(
             { _id: req.params.id },
@@ -41,7 +42,7 @@ exports.updateTaskService = async (req, res) => {
     });
 }
 
-exports.deleteTaskService = async (req, res) => {
+export async function deleteTaskService(req, res) {
     return new Promise((resolve, reject) => {
         taskModel.findByIdAndDelete(req.params.id)
             .then((task) => {
@@ -53,13 +54,17 @@ exports.deleteTaskService = async (req, res) => {
     });
 }
 
-exports.createTokenSevice = async (req, res) => {
+export async function createTokenSevice(req, res) {
+    console.log(req.body);
     return new Promise((resolve, reject) => {
         try {
             const secretkey = "da30e0c0eafbadba9389c0883c6537acc7ba17e188a53f49e8dcf6bb914c1fcb"
-            const token = jwt.sign(req.body, secretkey);
+            const token = sign(req.body, secretkey, { expiresIn: '1h' });
+            console.log(token);
+            console.log(token);
             resolve(token);
         } catch (error) {
+            console.log(error);
             reject(error);
         }
     });

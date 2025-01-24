@@ -1,12 +1,12 @@
-const mongoose = require("mongoose");
+import { connect } from "mongoose";
 
-module.exports = async () => {
+export default async () => {
     try {
         const connectionParams = {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         };
-        await mongoose.connect(
+        await connect(
             "mongodb://localhost:27017/todo-app",
             connectionParams
         );

@@ -1,4 +1,4 @@
-const route = require("./../routes/tasksRoute");
+import route from "./../routes/tasksRoute.js";
 
 describe("tasksRoute", () => {
     test("should return a function", () => {

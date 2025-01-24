@@ -1,5 +1,5 @@
-const TaskController = require('../controllers/TaskController');
-const taskModel = require('../models/task');
+import { createTaskController, getTasksController, updateTaskController, deleteTaskController } from '../controllers/TaskController.js';
+import taskModel from '../models/task.js';
 
 
 jest.mock("../models/task");
@@ -9,7 +9,8 @@ jest.mock("../services/TaskService", () => ({
     getTasksService: jest.fn(),
     createTaskService: jest.fn(),
 }));
-const TaskService = require('../services/TaskService');
+
+import { createTaskService as _createTaskService, getTasksService as _getTasksService, updateTaskService as _updateTaskService, deleteTaskService as _deleteTaskService } from '../services/TaskService';
 
 describe("Task Controller", () => {
     let req;
@@ -35,24 +36,24 @@ describe("Task Controller", () => {
 
     it("should create a new task", async () => {
         const newTask = { ...req.body, _id: '12345' };
-        TaskService.createTaskService.mockResolvedValue(newTask);
-        await TaskController.createTaskController(req, res);
+        _createTaskService.mockResolvedValue(newTask);
+        await createTaskController(req, res);
 
-        expect(TaskService.createTaskService).toHaveBeenCalledTimes(1);
-        expect(TaskService.createTaskService).toHaveBeenCalledWith(req, res);
+        expect(_createTaskService).toHaveBeenCalledTimes(1);
+        expect(_createTaskService).toHaveBeenCalledWith(req, res);
         expect(res.status).toHaveBeenCalledWith(201);
         expect(res.send).toHaveBeenCalledWith(newTask);
     });
 
     it('should handle error if task creation fails', async () => {
         const mockError = new Error('Task creation failed');
-        TaskService.createTaskService.mockRejectedValue(mockError);
+        _createTaskService.mockRejectedValue(mockError);
 
         // Act: Call the controller
-        await TaskController.createTaskController(req, res);
+        await createTaskController(req, res);
 
         // Assert: Check that the error is sent in the response
-        expect(TaskService.createTaskService).toHaveBeenCalledTimes(2);
+        expect(_createTaskService).toHaveBeenCalledTimes(1);
     });
 
     it("should get all tasks", async () => {
@@ -68,10 +69,10 @@ describe("Task Controller", () => {
                 status: 'In Progress',
             }
         ];
-        TaskService.getTasksService.mockResolvedValue(mockTasks);
-        await TaskController.getTasksController(req, res);
-        expect(TaskService.getTasksService).toHaveBeenCalledTimes(1);
-        expect(TaskService.getTasksService).toHaveBeenCalledWith(req, res); // Ensure the service is called with req and res
+        _getTasksService.mockResolvedValue(mockTasks);
+        await getTasksController(req, res);
+        expect(_getTasksService).toHaveBeenCalledTimes(1);
+        expect(_getTasksService).toHaveBeenCalledWith(req, res); // Ensure the service is called with req and res
         expect(res.status).toHaveBeenCalledWith(200); // Check if status 200 (OK) is returned
         expect(res.send).toHaveBeenCalledWith(mockTasks);
     });
@@ -79,61 +80,61 @@ describe("Task Controller", () => {
     it('should respond with an error and a 500 status code when service rejects', async () => {
         // Mock the service to return an error
         const mockError = new Error('Something went wrong');
-        TaskService.getTasksService.mockRejectedValue(mockError);
+        _getTasksService.mockRejectedValue(mockError);
 
         // Call the controller
-        await TaskController.getTasksController(req, res);
+        await getTasksController(req, res);
 
         // Assertions+
-        expect(TaskService.getTasksService).toHaveBeenCalledWith(req, res);
+        expect(_getTasksService).toHaveBeenCalledWith(req, res);
     });
 
     it('should respond with the updated task when service resolves', async () => {
         // Mock the service to return a successful response
         const mockTask = { id: 1, task: 'Updated Task' };
-        TaskService.updateTaskService.mockResolvedValue(mockTask);
+        _updateTaskService.mockResolvedValue(mockTask);
 
         // Call the controller
-        await TaskController.updateTaskController(req, res);
+        await updateTaskController(req, res);
 
         // Assertions
-        expect(TaskService.updateTaskService).toHaveBeenCalledWith(req, res);
+        expect(_updateTaskService).toHaveBeenCalledWith(req, res);
         expect(res.send).toHaveBeenCalledWith(mockTask);
     });
 
     it('should respond with an error when service rejects', async () => {
         // Mock the service to return an error
         const mockError = new Error('Update failed');
-        TaskService.updateTaskService.mockRejectedValue(mockError);
+        _updateTaskService.mockRejectedValue(mockError);
 
         // Call the controller
-        await TaskController.updateTaskController(req, res);
+        await updateTaskController(req, res);
 
         // Assertions
-        expect(TaskService.updateTaskService).toHaveBeenCalledWith(req, res);
+        expect(_updateTaskService).toHaveBeenCalledWith(req, res);
     });
 
     it('should respond with the task when service resolves', async () => {
         // Mock the service to return a successful response
         const mockTask = { message: 'Task deleted successfully', id: '123' };
-        TaskService.deleteTaskService.mockResolvedValue(mockTask);
+        _deleteTaskService.mockResolvedValue(mockTask);
 
         // Call the controller
-        await TaskController.deleteTaskController(req, res);
+        await deleteTaskController(req, res);
 
-        expect(TaskService.deleteTaskService).toHaveBeenCalledWith(req, res);
+        expect(_deleteTaskService).toHaveBeenCalledWith(req, res);
         expect(res.send).toHaveBeenCalledWith(mockTask);
     });
 
     it('should respond with an error when service rejects', async () => {
         // Mock the service to return an error
         const mockError = new Error('Delete failed');
-        TaskService.deleteTaskService.mockRejectedValue(mockError);
+        _deleteTaskService.mockRejectedValue(mockError);
 
         // Call the controller
-        await TaskController.deleteTaskController(req, res);
+        await deleteTaskController(req, res);
 
         // Assertions
-        expect(TaskService.deleteTaskService).toHaveBeenCalledWith(req, res);
+        expect(_deleteTaskService).toHaveBeenCalledWith(req, res);
     });
 });

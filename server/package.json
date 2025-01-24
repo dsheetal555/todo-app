@@ -2,6 +2,7 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "jest"
@@ -15,7 +16,8 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.9.5"
+    "mongoose": "^8.9.5",
+    "supertest": "^7.0.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",

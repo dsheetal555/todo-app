@@ -1,6 +1,6 @@
-const { createTaskService, getTasksService, updateTaskService, deleteTaskService, createTokenSevice } = require('../services/TaskService');
+import { createTaskService, getTasksService, updateTaskService, deleteTaskService, createTokenSevice } from '../services/TaskService.js';
 
-exports.createTaskController = (req, res) => {
+export function createTaskController(req, res) {
     createTaskService(req, res).then((task) => {
         res.status(201).send(task);
     }).catch((error) => {
@@ -8,7 +8,7 @@ exports.createTaskController = (req, res) => {
     });
 }
 
-exports.getTasksController = (req, res) => {
+export function getTasksController(req, res) {
     getTasksService(req, res).then((tasks) => {
         res.status(200).send(tasks);
     }).catch((error) => {
@@ -16,7 +16,7 @@ exports.getTasksController = (req, res) => {
     });
 }
 
-exports.updateTaskController = (req, res) => {
+export function updateTaskController(req, res) {
     updateTaskService(req, res)
         .then((task) => {
             res.status(200).send(task);
@@ -26,7 +26,7 @@ exports.updateTaskController = (req, res) => {
         });
 }
 
-exports.deleteTaskController = async (req, res) => {
+export async function deleteTaskController(req, res) {
     deleteTaskService(req, res).then((task) => {
         res.send(task);
     }).catch((error) => {
@@ -34,7 +34,7 @@ exports.deleteTaskController = async (req, res) => {
     });
 }
 
-exports.createToken = (req, res) => {
+export function createToken(req, res) {
     createTokenSevice(req, res)
         .then((token) => {
             res.send({ token });
